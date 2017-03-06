@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package spotisync;
+
+service SyncServer {
+  rpc Ping (Heartbeat) returns (Heartbeat) {}
+  rpc FetchRoom (RoomRequest) returns (RoomRequest) {}
+  rpc SendUpdate (stream Update) returns (Heartbeat) {}
+  rpc Follow (stream Heartbeat) returns (stream Update) {}
+}
+
+message RoomRequest {
+  enum RequestType {
+    JOIN = 0;
+    CREATE = 1;
+    INVALID = 2;
+  }
+  RequestType type = 1;
+  string id = 2;
+}
+
+// The request message containing the user's name.
+message Update {
+  enum UpdateType {
+    NEXT = 0;
+    PLAY = 1;
+    PAUSE = 2;
+    SEEK = 3;
+  }
+  UpdateType type = 1;
+  string uri = 2;
+  double time = 3;
+  double length = 4;
+}
+
+// The response message containing the greetings
+message Heartbeat {
+}

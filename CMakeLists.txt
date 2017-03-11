@@ -16,6 +16,10 @@ option(USE_LIBSSH2 "" OFF)
 option(CMAKE_USE_LIBSSH2 "" OFF)
 add_subdirectory("${CMAKE_SOURCE_DIR}/third_party/curl" EXCLUDE_FROM_ALL)
 
+set(gRPC_SSL_PROVIDER "package" CACHE STRING "") #Dont need unnecessary Go dep.
+set(gRPC_PROTOBUF_PROVIDER "package" CACHE STRING "") 
+add_subdirectory("${CMAKE_SOURCE_DIR}/third_party/grpc" EXCLUDE_FROM_ALL)
+
 include_directories(/usr/local/include "${CMAKE_SOURCE_DIR}/third_party/json/src")
 link_directories(/usr/local/lib)
 
@@ -34,11 +38,11 @@ add_custom_command(
     "${SPOTISYNC_PB_CPP_FILE}"
     "${SPOTISYNC_GRPC_PB_H_FILE}"
     "${SPOTISYNC_GRPC_PB_CPP_FILE}"
-    COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
+    COMMAND "protoc" #${PROTOBUF_PROTOC_EXECUTABLE}
     ARGS "--proto_path=${PROTO_PATH}"
          "--cpp_out=${GENERATED_PROTOBUF_PATH}"
          "${SPOTISYNC_PROTO}"
-    COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
+    COMMAND "protoc" #${PROTOBUF_PROTOC_EXECUTABLE}
     ARGS "--proto_path=${PROTO_PATH}"
          "--grpc_out=${GENERATED_PROTOBUF_PATH}"
          "--plugin=protoc-gen-grpc=/usr/bin/grpc_cpp_plugin" #TODO: Read up on this for windows
@@ -58,9 +62,16 @@ set(
     src/spotifyupdate.cpp   
     src/main.cpp
 )
+
 include_directories(${GENERATED_PROTOBUF_PATH})
-link_libraries(grpc++_unsecure grpc gpr ${PROTOBUF_LIBRARY})
+
+link_libraries(
+    grpc++_unsecure
+    grpc 
+    gpr
+    ${PROTOBUF_LIBRARY}
+)
 
 add_executable(spotisync ${SOURCE_FILES} ${GENERATED_PROTOBUF_FILES})
 add_dependencies(spotisync libcurl)
-target_link_libraries(spotisync Threads::Threads libcurl)
+target_link_libraries(spotisync Threads::Threads)

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <atomic>
 #include <thread>
+#include <string>
 
 #include <grpc++/create_channel.h>
 #include <grpc++/security/credentials.h>
@@ -11,7 +12,7 @@
 int main()
 {
   Client client(grpc::CreateChannel(IP, grpc::InsecureChannelCredentials())); 
-  auto err = client.connect().error_code();
+  auto err = 0;//client.connect().error_code();
 
   if(err == 14) { // TODO: fix
     std::cout << "Server refused connection!\n";
@@ -31,9 +32,9 @@ int main()
       break;
   }
   std::atomic<bool> stop;
+      client.follow(stop);
   std::thread worker([&]() {
     if (option == "1") {
-      client.follow(stop);
     } else {
     //  client.lead();
     }

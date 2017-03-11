@@ -27,7 +27,7 @@ Status Client::connect()
   ctx.set_deadline(deadline);
   Heartbeat hb_send;
   Heartbeat hb_recieve;
-  return stub->Ping(&ctx, hb_send, &hb_recieve);
+  return stub->Ping(&ctx, hb_send, nullptr);
 }
 
 void Client::follow(std::atomic<bool>& should_stop)

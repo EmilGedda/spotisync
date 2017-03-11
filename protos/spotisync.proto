@@ -35,4 +35,6 @@ message Update {
 
 // The response message containing the greetings
 message Heartbeat {
+  double tmp = 1;
 }
+

@@ -29,4 +29,5 @@ struct Track {
 void from_json(const json& j, Location& l);
 void from_json(const json& j, Resource& l);
 void from_json(const json& j, Track& l);
+
 }

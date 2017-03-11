@@ -18,7 +18,7 @@ class Client {
   Spotify spotify;
 
 public:
-  Client(std::shared_ptr<Channel> chan);
+  explicit Client(std::shared_ptr<Channel> chan);
 
   Status connect();
 

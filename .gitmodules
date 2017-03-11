@@ -4,3 +4,6 @@
 [submodule "third_party/curl"]
 	path = third_party/curl
 	url = git@github.com:curl/curl.git
+[submodule "third_party/grpc"]
+	path = third_party/grpc
+	url = https://github.com/grpc/grpc

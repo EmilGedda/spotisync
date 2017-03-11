@@ -27,7 +27,8 @@ int main()
   std::string option;
   while (true) {
     std::cout << "Enter option: ";
-    std::cin >> option;
+    if(!(std::cin >> option))
+      return 1;
     if (option == "1" || option == "2")
       break;
   }

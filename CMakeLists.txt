@@ -1,8 +1,20 @@
 cmake_minimum_required(VERSION 3.3)
 project(spotisync_client)
+
 find_package(Protobuf REQUIRED)
 find_package(Threads REQUIRED)
+
 set(CMAKE_CXX_STANDARD 14)
+
+option(BUILD_CURL_EXE "" OFF)
+option(CURL_STATICLIB "" ON)
+option(HTTP_ONLY "" ON)
+option(ENABLE_MANUAL "" OFF)
+option(CURL_DISABLE_CRYPTO_AUTH "" ON)
+option(USE_UNIX_SOCKETS "" OFF)
+option(USE_LIBSSH2 "" OFF)
+option(CMAKE_USE_LIBSSH2 "" OFF)
+add_subdirectory("${CMAKE_SOURCE_DIR}/third_party/curl" EXCLUDE_FROM_ALL)
 
 include_directories(/usr/local/include "${CMAKE_SOURCE_DIR}/third_party/json/src")
 link_directories(/usr/local/lib)
@@ -50,4 +62,5 @@ include_directories(${GENERATED_PROTOBUF_PATH})
 link_libraries(grpc++_unsecure grpc gpr ${PROTOBUF_LIBRARY})
 
 add_executable(spotisync ${SOURCE_FILES} ${GENERATED_PROTOBUF_FILES})
-target_link_libraries(spotisync Threads::Threads)
+add_dependencies(spotisync libcurl)
+target_link_libraries(spotisync Threads::Threads libcurl)

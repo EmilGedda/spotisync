@@ -1,49 +1,27 @@
+// rapidjson/example/simpledom/simpledom.cpp`
+#include "rapidjson/document.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
 #include <iostream>
-#include <atomic>
-#include <thread>
-#include <string>
 
-#include <grpc++/create_channel.h>
-#include <grpc++/security/credentials.h>
-#include "client.hpp"
+using namespace rapidjson;
 
-#define IP "localhost:54321"
+int main() {
+    // 1. Parse a JSON string into DOM.
+    const char* json = "{\"project\":\"rapidjson\",\"stars\":10}";
+    Document d;
+    d.Parse(json);
 
-int main()
-{
-  Client client(grpc::CreateChannel(IP, grpc::InsecureChannelCredentials())); 
-  auto err = 0;//client.connect().error_code();
+    // 2. Modify it by DOM.
+    Value& s = d["stars"];
+    s.SetInt(s.GetInt() + 1);
 
-  if(err == 14) { // TODO: fix
-    std::cout << "Server refused connection!\n";
-    return 1;
-  } else if (err == 4) {
-    std::cout << "Unable to connect to server!\n";
-    return 1;
-  }
+    // 3. Stringify the DOM
+    StringBuffer buffer;
+    Writer<StringBuffer> writer(buffer);
+    d.Accept(writer);
 
-  std::cout << "1. Create a room\n"
-            << "2. Join a room\n";
-  std::string option;
-  while (true) {
-    std::cout << "Enter option: ";
-    if(!(std::cin >> option))
-      return 1;
-    if (option == "1" || option == "2")
-      break;
-  }
-  std::atomic<bool> stop;
-      client.follow(stop);
-  std::thread worker([&]() {
-    if (option == "1") {
-    } else {
-    //  client.lead();
-    }
-  });
-
-  std::string cmd;
-  while(!stop && std::cin >> cmd && cmd != "q");
-  stop = true;
-  worker.join();
-  main();
+    // Output {"project":"rapidjson","stars":11}
+    std::cout << buffer.GetString() << std::endl;
+    return 0;
 }

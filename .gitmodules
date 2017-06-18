@@ -1,9 +1,9 @@
-[submodule "third_party/json"]
-	path = third_party/json
-	url = https://github.com/nlohmann/json
 [submodule "third_party/curl"]
 	path = third_party/curl
 	url = git@github.com:curl/curl.git
-[submodule "third_party/grpc"]
-	path = third_party/grpc
-	url = https://github.com/grpc/grpc
+[submodule "third_party/rapidjson"]
+	path = third_party/rapidjson
+	url = https://github.com/miloyip/rapidjson
+[submodule "third_party/capnproto"]
+	path = third_party/capnproto
+	url = https://github.com/capnproto/capnproto
